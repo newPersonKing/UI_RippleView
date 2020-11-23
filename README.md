@@ -1,3 +1,35 @@
+知识点
+```java
+   private Bitmap getOriginBitmap(){
+        if(originBitmap == null || originBitmap.isRecycled()){
+            originBitmap = getDrawingCache(true);/*getDrawingCache 可以理解为获取截图*/
+        }
+        return originBitmap;
+    }
+    
+       /*获取view的截图 然后以点击点为中心 绘制圆以及截图*/
+  private Bitmap getCircleBitmap(final int radius) {
+        Bitmap originBitmap = getOriginBitmap();
+        final Bitmap output = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect((int)(x - radius), (int)(y - radius), (int)(x + radius), (int)(y + radius));
+
+        paint.setAntiAlias(true);
+//        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawCircle(x, y, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        /*绘制bitmap指定区域 到canvas的指定区域*/
+        canvas.drawBitmap(originBitmap, rect, rect, paint);
+
+        return output;
+    }
+
+
+```
+
+
 RippleEffect
 ================
 
