@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by TraeX on 24/10/14.
@@ -31,7 +34,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int i)
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i)
     {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener()
         {
@@ -39,10 +42,23 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             public void onClick(View v)
             {
                 if (onTapListener != null)
-                    onTapListener.onTapView(i);
+                    onTapListener.onTapView(viewHolder.getAdapterPosition());
             }
         });
         viewHolder.textView.setText(textArrayList.get(i));
+    }
+
+
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        super.onViewRecycled(holder);
+        ((RippleView)holder.itemView).reset();
     }
 
     @Override

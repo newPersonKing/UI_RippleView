@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.animation.Animation;
@@ -151,7 +152,6 @@ public class RippleView extends RelativeLayout {
             if (timer == 0)
                 canvas.save();
 
-
             canvas.drawCircle(x, y, getCurrentRadius(), paint);
 
             paint.setColor(Color.parseColor("#ffff4444"));
@@ -174,6 +174,20 @@ public class RippleView extends RelativeLayout {
 
             timer++;
         }
+    }
+
+    public void reset(){
+        animationRunning = false;
+        scaleAnimation.cancel();
+        canvasHandler.removeCallbacks(runnable);
+        timer = 0;
+        durationEmpty = -1;
+        timerEmpty = 0;
+        paint.reset();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(rippleColor);
+        paint.setAlpha(rippleAlpha);
     }
 
     private float getCurrentRadius(){
@@ -242,7 +256,7 @@ public class RippleView extends RelativeLayout {
 
             radiusMax -= ripplePadding;
 
-            if (isCentered || rippleType == 1) {
+            if (isCentered) {
                 this.x = getMeasuredWidth() / 2;
                 this.y = getMeasuredHeight() / 2;
             } else {
@@ -307,12 +321,12 @@ public class RippleView extends RelativeLayout {
         final Rect rect = new Rect((int)(x - radius), (int)(y - radius), (int)(x + radius), (int)(y + radius));
 
         paint.setAntiAlias(true);
-//        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawARGB(0, 0, 0, 0);
         canvas.drawCircle(x, y, radius, paint);
 
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         /*绘制bitmap指定区域 到canvas的指定区域*/
-        canvas.drawBitmap(originBitmap, rect, rect, paint);
+        canvas.drawBitmap(getOriginBitmap(), rect, rect, paint);
 
         return output;
     }
